@@ -1,0 +1,86 @@
+package com.webdw.model.dboper;
+
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
+
+/**
+ * 读取数据窗口的配置文件信息，配置信息被放置在t_datawindow这个配置表中
+ * @author Administrator
+ *
+ */
+public class DWConfig {
+
+	//获取数据库的配置连接对象
+	private Connection getConnection() throws Exception {
+		String configfile = "com/liu/database.properties";
+		String url = "";
+		String driver = "";
+		String userid = "";
+		String passwd = "";
+		ClassLoader loader = (new CEmpty()).getClass().getClassLoader();
+		java.io.InputStream stream = loader.getResourceAsStream(configfile);
+		Properties prop = new Properties();
+		prop.load(stream);
+		url = prop.getProperty("url");
+		driver = prop.getProperty("driver");
+		userid = prop.getProperty("userid");
+		passwd = prop.getProperty("passwd");
+		Class.forName(driver);
+		Connection conn = DriverManager.getConnection(url, userid, passwd);
+		return conn;
+	}
+
+	//获取一个字符串的返回值
+	private String getSingleStringValue(String sql) throws Exception {
+		//打开数据库连接
+		Connection conn = this.getConnection();
+		Statement stat = conn.createStatement();
+		ResultSet rs = stat.executeQuery(sql);
+		String sret ="";
+		
+		//获取返回结果
+		if(rs.next()) {
+			sret = rs.getString(1);
+		}
+		
+		//关闭数据库连接
+		rs.close();
+		stat.close();
+		conn.close();
+		rs = null;
+		stat = null;
+		conn = null;
+		//return
+		return sret;
+		
+	}
+
+	//从数据库中获取数据窗口的定义字符串
+	public String getDWSyntaxStringByDWName(String dwname) {
+		String strsql = "select dw_define from t_datawindow where dw_name='"+dwname+"'";
+		System.out.println(strsql);
+		try {
+			return this.getSingleStringValue(strsql);
+		} catch (Exception e) {
+			System.out.println("SQL ERROR:"+e.toString());
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public String getDWSelectSQLByDWName(String dwname) {
+		String strsql = "select dw_selectsql from t_datawindow where dw_name='"+dwname+"'";
+		System.out.println(strsql);
+		try {
+			return this.getSingleStringValue(strsql);
+		} catch (Exception e) {
+			System.out.println("SQL ERROR:"+e.toString());
+			e.printStackTrace();
+		}
+		return "";
+	}
+		
+	
+}
