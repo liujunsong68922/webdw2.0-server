@@ -13,3 +13,11 @@ WebDW1.0的后端采用的是纯JAVA编写，采用标准的Servlet接口提供�
 WebDW2.0的后端采用的是SpringBoot,采用标准的Rest接口提供View Model服务，返回结果是json数据格式；
 
 后续WebDW1.0的各语言版本将停止开发，而将精力集中在WebDW2.0的开发上。
+
+构建过程如下：
+1. 下载源代码，采用git clone 方式下载或者下载zip包解压均可。
+2. 在本地mysql建立一个名为webdw2.0的数据库
+3. 利用src/dbsql目录下的sql脚本创建所需要的数据表
+4. cd webdw-server
+5. mvn clean package ,打包成war
+6. 手工拷贝war包到tomcat webapps目录下，启动tomcat, 发布完成。
