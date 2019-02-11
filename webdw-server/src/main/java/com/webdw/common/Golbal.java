@@ -1,7 +1,6 @@
 package com.webdw.common;
 
 import com.webdw.model.CWebDW;
-import com.webdw.model.dboper.CWebDWTransaction;
 import com.webdw.model.dboper.Transaction_Const;
 import com.webdw.model.dwsyntax.WebDWSyntax;
 import com.webdw.view.ui.MyUIComponent;
@@ -89,44 +88,6 @@ public class Golbal extends VBFunction {
 		return convertRate;
 	}
 
-	/**
-	 * �����﷨����������ݼ���
-	 * 
-	 * @param dwSyntax
-	 * @return
-	 */
-//	public String GF_RetrieveBySyntax(String dwSyntax) {
-//		MyInt iret = new MyInt(0);
-//		CWebDW temp_webdw = new CWebDW();
-//		CWebDWTransaction temp_sqlca = new CWebDWTransaction();
-//		String str_retrieve = "";
-//		String sdata = "";
-//
-//		if (temp_webdw.Create(dwSyntax) == -1) {// Then '����ʧ�ܣ����ؿ��ַ���
-//			return "";
-//		}
-//		log(dwSyntax);
-//		log("" + GG_webdw.getColumnNumber());
-//		str_retrieve = temp_webdw.GetRetrieveSQL();// '�õ������õ�SQL���
-//		log(str_retrieve);
-//		if (str_retrieve.length() == 0) {
-//			return "";
-//		}
-//
-//		//
-//		// 'temp_sqlca.opertype = 1
-//		// 'temp_sqlca.beginPos = 0
-//		// 'temp_sqlca.readNum = 1000
-//		temp_sqlca.Eval("Setcommand(" + str_retrieve + ")", iret);
-//
-//		sdata = temp_sqlca.ExecuteSelect(iret);// 'ִ��sql,�õ����ݽ��
-//
-//		if (iret.intvalue == -1) {// Then
-//			return "";
-//		}
-//
-//		return sdata;// '��������
-//	}
 
 	public long GF_GetDBlength(String sdata) {
 		int i = 0;

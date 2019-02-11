@@ -7,7 +7,7 @@ import com.webdw.common.MyInt;
 import com.webdw.common.util.SQLStringReplaceUtil;
 import com.webdw.model.CWebDW;
 import com.webdw.model.CWebDWData;
-import com.webdw.model.dboper.CWebDWTransaction;
+import com.webdw.model.dboper.DBModifyOper;
 import com.webdw.model.dboper.DBSelectOper;
 import com.webdw.model.dboper.DWConfig;
 import com.webdw.model.dwsyntax.WebDWSyntax;
@@ -28,7 +28,6 @@ public class DataWindowController extends Golbal {
 	// This is the model part of DataWindowController
 	public CWebDW webdw = new CWebDW();//
 	public CWebDWData webdwData = new CWebDWData();//
-	public CWebDWTransaction sqlca = new CWebDWTransaction();//
 
 	// This is the view part of DataWindowController
 	public ArrayList targetControls = null;//
@@ -73,15 +72,6 @@ public class DataWindowController extends Golbal {
 
 	}
 
-//	private String _DW_GetSQLSelect(String dwname) {
-//		String strsql = "";// As String
-//
-//		DWConfig config = new DWConfig();
-//		strsql = config.getDWSelectSQLByDWName(dwname);
-//
-//		return strsql;
-//	}
-
 	public int DW_Retrieve(String args) throws Exception {
 		if (targetControls == null || targetPict == null) {
 			// DW_Retrieve = -1
@@ -112,12 +102,6 @@ public class DataWindowController extends Golbal {
 		// 执行Select SQL,返回结果
 		DBSelectOper dboper = new DBSelectOper();
 		sdata = dboper.executeSelect(strsql);
-
-		if (iret.intvalue == -1) {
-			// DW_Retrieve = -1
-			errString = sqlca.errString;
-			return -1;
-		}
 
 		_SetData(sdata, "normal");
 		int i = DrawDW();
@@ -239,7 +223,6 @@ public class DataWindowController extends Golbal {
 	}
 
 	public int DW_DeleteRow(int rowid) throws Exception {
-		// '�߼��жϣ�����ǰ�ȳ�ʼ�����ݴ��ڿؼ�
 		if (targetControls == null || targetPict == null) {
 			// DW_DeleteRow = -1
 			errString = "Please Call SetDataObject First.";
@@ -258,7 +241,8 @@ public class DataWindowController extends Golbal {
 			return -1;
 		}
 
-		DrawDW();
+		this.DW_Update();
+		this.DrawDW();
 
 		return 0;
 	}
@@ -283,60 +267,25 @@ public class DataWindowController extends Golbal {
 		}
 
 		String strsql = "";// As String
-		String sdata = "";// As String
-
 		strsql = DW_GetSQLPreview(iret);
-		System.out.println(strsql);
+		System.out.println("strsql:"+strsql);
 
 		if (iret.intvalue == -1) {
 			return -1;
 		}
 
 		String cmds[] = new String[1];// ) As String
-		int cmdid = 0;// As Long
-		String transid = "";// As String
-
-		transid = sqlca.Eval("GetTransid", iret);
 		cmds = Split(strsql, "" + Chr(13) + Chr(10));
-
-		boolean autoCommit = true;
-		if (autoCommit) {
-			if (transid.length() > 0) {// '����Ѿ����������ύ֮
-				sqlca.Commit(iret);
-			}
-
-			sqlca.BeginTransaction(iret);// '��������
-			if (iret.intvalue == -1) {
-				// DW_Update = -1
-				errString = sqlca.errString;
-				return -1;
-			}
-
-			for (cmdid = 0; cmdid <= UBound(cmds); cmdid++) {
-				sqlca.Eval("Setcommand(" + cmds[cmdid] + ")", iret);// '�������
-				sqlca.AddCommand(iret);
-			}
-
-			sqlca.Commit(iret);// '�ύ����
-			if (iret.intvalue == -1) {
-				// DW_Update = -1
-				errString = sqlca.errString;
-				return -1;
-			}
-			webdwData.AfterUpdate();
-
-		} else {// '�ֹ�����״̬������transId>""������ܾ�����
-			if (transid.equals("")) {// Then
-				// DW_Update = -1
-				errString = "Please Call BeginTransaction First";
-				return -1;
-			}
-
-			for (cmdid = 0; cmdid <= UBound(cmds); cmdid++) {
-				sqlca.Eval("Setcommand(" + cmds[cmdid] + ")", iret);// '�������
-				sqlca.AddCommand(iret);
-			}
+		
+		System.out.println("length:"+cmds.length);
+		
+		DBModifyOper dboper = new DBModifyOper();
+		for(String sql:cmds) {
+			
+			//执行SQL更新操作
+			dboper.executeModify(sql);
 		}
+		
 		return 0;
 	}
 }
