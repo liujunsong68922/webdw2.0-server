@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
+import com.webdw.common.util.SQLStringReplaceUtil;
 import com.webdw.model.CWebDW;
 import com.webdw.model.CWebDWData;
 import com.webdw.model.dboper.CWebDWTransaction;
@@ -72,14 +73,14 @@ public class DataWindowController extends Golbal {
 
 	}
 
-	private String _DW_GetSQLSelect(String dwname) {
-		String strsql = "";// As String
-
-		DWConfig config = new DWConfig();
-		strsql = config.getDWSelectSQLByDWName(dwname);
-
-		return strsql;
-	}
+//	private String _DW_GetSQLSelect(String dwname) {
+//		String strsql = "";// As String
+//
+//		DWConfig config = new DWConfig();
+//		strsql = config.getDWSelectSQLByDWName(dwname);
+//
+//		return strsql;
+//	}
 
 	public int DW_Retrieve(String args) throws Exception {
 		if (targetControls == null || targetPict == null) {
@@ -100,9 +101,14 @@ public class DataWindowController extends Golbal {
 		// 从数据窗口配置表中进行读取
 		DWConfig config = new DWConfig();
 		strsql = config.getDWSelectSQLByDWName(dwname);
-
+		String strargs = config.getDWSelectArgsByDWName(dwname);
+		String selectargs[] = strargs.split(",");
+		
 		// TODO:查询参数替换及SQL检查
-
+		SQLStringReplaceUtil strUtil = new SQLStringReplaceUtil();
+		// 参数替换
+		strsql = strUtil.Replace(strsql, selectargs, args);
+		
 		// 执行Select SQL,返回结果
 		DBSelectOper dboper = new DBSelectOper();
 		sdata = dboper.executeSelect(strsql);
@@ -112,7 +118,7 @@ public class DataWindowController extends Golbal {
 			errString = sqlca.errString;
 			return -1;
 		}
-		// '���������ݣ���ʼ�����ݴ���
+
 		_SetData(sdata, "normal");
 		int i = DrawDW();
 		return i;

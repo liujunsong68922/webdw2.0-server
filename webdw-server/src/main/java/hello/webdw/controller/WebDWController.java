@@ -72,7 +72,8 @@ public class WebDWController {
 	 * @return
 	 */
 	@GetMapping(path = "/retrieve")
-	public @ResponseBody WebDWControllerRet Retrieve(@RequestParam String dwname) throws Exception {
+	public @ResponseBody WebDWControllerRet Retrieve(@RequestParam String dwname,
+			@RequestParam String args) throws Exception {
 		DataWindowController webdwui = new DataWindowController();
 		WebDWControllerRet ret = new WebDWControllerRet();
 
@@ -85,7 +86,7 @@ public class WebDWController {
 
 		System.out.println("begin to call retrieve function");
 		// set DataBuffer
-		webdwui.DW_Retrieve("");
+		webdwui.DW_Retrieve(args);
 
 		CWebDWMemCache.saveParentDW(webdwui);
 		// System.out.println("rowcount:" + webdwui.DW_RowCount());
