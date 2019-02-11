@@ -1,4 +1,4 @@
-package com.webdw.exception;
+package com.webdw.common.exception;
 
 /**
  * WebDWException 代表可捕获的业务逻辑类异常，推送异常信息给前台（显示或不显示）

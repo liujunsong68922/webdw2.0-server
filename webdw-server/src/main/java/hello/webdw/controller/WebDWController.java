@@ -140,27 +140,6 @@ public class WebDWController {
 		return ret;
 	}
 
-	@GetMapping(path = "/setrow")
-	public @ResponseBody WebDWControllerRet SetRow(@RequestParam String uuid, @RequestParam int rowid)
-			throws Exception {
-		System.out.println("enter SetRow rowid:" + rowid);
-		DataWindowController webdwui = new DataWindowController();
-		webdwui = CWebDWMemCache.readParentDW(uuid);
-
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-		webdwui.targetControls = retList;
-		webdwui.targetPict = targPict;
-
-		webdwui.DW_SetRow(rowid);
-		webdwui.DrawDW();
-		WebDWControllerRet ret = new WebDWControllerRet();
-
-		ret.uuid = uuid;
-		ret.uiobjList = webdwui.targetControls;
-		return ret;
-	}
-
 	@GetMapping(path = "/setdata")
 	public @ResponseBody WebDWControllerRet SetData(@RequestParam String uuid, @RequestParam int rowid,
 			@RequestParam int colid, @RequestParam String data) throws Exception {

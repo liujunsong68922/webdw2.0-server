@@ -32,7 +32,6 @@ public class DataWindowController extends Golbal {
 	// This is the view part of DataWindowController
 	public ArrayList targetControls = null;//
 	public MyJPanel targetPict = null;
-	public int currentRow = 0;//
 	private MyInt iret = new MyInt(0);//
 
 	public DataWindowController() {
@@ -256,15 +255,6 @@ public class DataWindowController extends Golbal {
 		DrawDW();
 
 		return 0;
-	}
-
-	public int DW_SetRow(int rowid) {
-		if (rowid > 0 && rowid <= DW_RowCount()) {
-			currentRow = rowid;
-			return 1;// '����1����ɹ�
-		} else {
-			return -1;// '����-1����ʧ��
-		}
 	}
 
 	public int DW_SetItem(int rowid, int colid, String sdata) {

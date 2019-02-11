@@ -1,7 +1,7 @@
 package com.webdw.model;
 
 import com.webdw.common.Golbal;
-import com.webdw.exception.WebDWException;
+import com.webdw.common.exception.WebDWException;
 import com.webdw.model.dwsyntax.WebDWSyntax;
 
 /**
