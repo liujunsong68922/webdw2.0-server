@@ -45,9 +45,11 @@ public class DBModifyOper {
 			Statement stat = conn.createStatement();
 			//设置连接为自动提交
 			conn.setAutoCommit(true);
-			long ireturn = stat.executeUpdate(strsql);
-			
 			System.out.println("execute sql:"+strsql);
+			if(strsql.length()<1) {
+				return 0;
+			}
+			long ireturn = stat.executeUpdate(strsql);
 			System.out.println(ireturn);
 			
 			if(stat!=null) {
