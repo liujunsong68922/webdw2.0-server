@@ -469,7 +469,7 @@ public class CWebDWData_DataBuffer extends Golbal {
 	// '���Ա��ʼ��
 	public int Init() {
 		Columns = new String[1];
-		DataArray = new String[1001];
+		DataArray = new String[100001];
 		errString = "";
 		RowNumber = 0;
 		ColNumber = 0;

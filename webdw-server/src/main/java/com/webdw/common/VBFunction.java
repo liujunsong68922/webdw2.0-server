@@ -146,7 +146,7 @@ public class VBFunction {
 	public String[] Split(String inStr1, String sepStr) {
 		// return inStr.split(sepStr);
 		int arraynum = 0;
-		String data[] = new String[1000];
+		String data[] = new String[100000];
 		int i = 0;
 		int tempi = 0;
 		tempi = InStr(i, inStr1, sepStr);
