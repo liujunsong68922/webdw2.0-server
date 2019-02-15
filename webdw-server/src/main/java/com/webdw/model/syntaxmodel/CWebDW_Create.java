@@ -1,4 +1,4 @@
-package com.webdw.model;
+package com.webdw.model.syntaxmodel;
 
 import java.util.ArrayList;
 
@@ -7,8 +7,8 @@ import com.webdw.common.MyInt;
 import com.webdw.common.VBFunction;
 import com.webdw.common.exception.WebDWException;
 import com.webdw.model.dboper.DWConfig;
-import com.webdw.model.dwsyntax.WebDWSyntax;
-import com.webdw.model.dwsyntax.WebDW_Column;
+import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
+import com.webdw.model.syntaxmodel.dwsyntax.WebDW_Column;
 
 /**
  * Generate WebDWSyntax Object(from db config)

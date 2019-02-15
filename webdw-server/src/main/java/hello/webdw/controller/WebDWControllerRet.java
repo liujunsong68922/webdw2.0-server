@@ -13,16 +13,4 @@ public class WebDWControllerRet {
 	//uiobjList is the ui object model generate by controller.
 	public ArrayList uiobjList= new ArrayList();
 	
-	public String getUuid() {
-		return uuid;
-	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-	public ArrayList getUiobjList() {
-		return uiobjList;
-	}
-	public void setUiobjList(ArrayList uiobjList) {
-		this.uiobjList = uiobjList;
-	}
 }

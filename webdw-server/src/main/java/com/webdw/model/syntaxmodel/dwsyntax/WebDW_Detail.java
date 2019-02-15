@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'detail���Զ���
 public class WebDW_Detail {

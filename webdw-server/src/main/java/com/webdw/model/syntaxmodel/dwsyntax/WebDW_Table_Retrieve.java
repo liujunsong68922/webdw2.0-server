@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'table.retrieveԪ�ض��壬����ֻ��һ��pbselectԪ��
 public class WebDW_Table_Retrieve {

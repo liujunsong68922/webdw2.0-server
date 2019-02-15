@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'�����ж�ѡ����֧�ֶ��壬����Column��һ������
 public class WebDW_Column_CheckBox {

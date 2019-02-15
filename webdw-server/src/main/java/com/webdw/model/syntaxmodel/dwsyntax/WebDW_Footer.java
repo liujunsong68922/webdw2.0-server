@@ -1,13 +1,13 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
-//'header���Զ���
-public class WebDW_Header {
+//'footer���Զ���
+public class WebDW_Footer {
 	public int height = 0;
 
 	public int color = 0;
 
-	public WebDW_Header Clone() {
-		WebDW_Header newOne = new WebDW_Header();
+	public WebDW_Footer Clone() {
+		WebDW_Footer newOne = new WebDW_Footer();
 
 		newOne.height = height;
 
@@ -33,3 +33,5 @@ public class WebDW_Header {
 	}
 
 }
+
+

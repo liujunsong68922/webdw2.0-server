@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'WebDW�õ����ڲ�Font���壬
 //'���Font���Զ�text��column��Ч

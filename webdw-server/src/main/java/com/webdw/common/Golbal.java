@@ -1,8 +1,8 @@
 package com.webdw.common;
 
-import com.webdw.model.CWebDW;
 import com.webdw.model.dboper.Transaction_Const;
-import com.webdw.model.dwsyntax.WebDWSyntax;
+import com.webdw.model.syntaxmodel.CWebDW;
+import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
 import com.webdw.view.ui.MyUIComponent;
 
 import java.util.List;

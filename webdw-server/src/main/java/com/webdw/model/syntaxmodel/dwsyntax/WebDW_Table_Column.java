@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'table��Ƕ��column���Զ���
 public class WebDW_Table_Column {

@@ -1,4 +1,4 @@
-package com.webdw.view;
+package com.webdw.model.viewmodel;
 
 import java.util.ArrayList;
 
@@ -31,8 +31,8 @@ import com.webdw.view.ui.element.MyJTextField;
  * @author Administrator
  *
  */
-public class DataWindowViewModel extends Golbal {
-	private DataWindowController parentDW = null;
+public class CWebDWViewModel extends Golbal {
+	//private DataWindowController parentDW = null;
 
 	private String errString = "";//
 	private int controlSeg = 0;//
@@ -44,20 +44,21 @@ public class DataWindowViewModel extends Golbal {
 	private CWebDWData webdwData = null;
 
 	//myControls is used for output
-	private ArrayList targetControls = null;//
+	public ArrayList targetControls = null;//
 	private MyUIComponent myControls[] = null;//
 
-	// 构造函数,将控制器对象注入其中
-	public DataWindowViewModel(DataWindowController _parentDW) {
-		this.parentDW = _parentDW;
-		//this.targetControls = _parentDW.targetControls;
-//		this.targetPict = _parentDW.targetPict;
-		//this.myControls = _parentDW.myControls;
-		//this.local_webdw = _parentDW.webdw.webdw_creator.local_webdw;
-		//this.webdwData = _parentDW.webdwData;
+	public CWebDWViewModel(WebDWSyntax webdw,CWebDWData webdwdata) {
+		//接收输入参数
+		this.local_webdw = webdw;
+		this.webdwData = webdwdata;
+		
+		//初始化视图模型,在视图模型被构建的时候进行初始化
+		this.targetControls = new ArrayList();
+		this.targetPict = new MyJPanel("targPict");
+		this.myControls = new MyUIComponent[10001];
 	}
 
-	private int DrawDW() throws Exception {
+	public int DrawDW() throws Exception {
 		if (targetControls == null || targetPict == null) {
 			errString = "Please Call SetDataObject First";
 			throw new Exception(errString);
@@ -81,10 +82,10 @@ public class DataWindowViewModel extends Golbal {
 		iret = _DrawDW_Label(0, 0);
 
 		// 'step4 draw column on body
-//		for (rowid = 1; rowid <= parentDW.webdwData.GetRowCount(); rowid++) {
-//			iret = _DrawDW_Label(rowid, 0);// '������һ�е�Label
-//			iret = _DrawDW_Column(rowid, 0);// '������һ�е�Column
-//		}
+		for (rowid = 1; rowid <= webdwData.GetRowCount(); rowid++) {
+			iret = _DrawDW_Label(rowid, 0);// '������һ�е�Label
+			iret = _DrawDW_Column(rowid, 0);// '������һ�е�Column
+		}
 
 		return 0;
 	}

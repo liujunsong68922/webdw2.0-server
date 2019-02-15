@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 public class WebDWSyntax {
 	public String ReadMe = ("WebDW Syntax model, define according to PB7.0");

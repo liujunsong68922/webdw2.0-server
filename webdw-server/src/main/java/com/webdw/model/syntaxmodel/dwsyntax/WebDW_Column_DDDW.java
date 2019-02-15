@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'�����ж��������ݴ��ڵ�֧�֣�����Column��һ������
 //'20090125�մ�����ʮ�����

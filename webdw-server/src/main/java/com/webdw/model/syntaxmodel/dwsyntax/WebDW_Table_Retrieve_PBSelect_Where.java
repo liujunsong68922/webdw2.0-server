@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'�������where��������
 public class WebDW_Table_Retrieve_PBSelect_Where {

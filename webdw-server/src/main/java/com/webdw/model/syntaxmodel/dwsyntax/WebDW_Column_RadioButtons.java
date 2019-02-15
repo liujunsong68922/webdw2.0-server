@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'�����жԵ�ѡ��ť���֧�ֶ��壬����Column��һ������
 public class WebDW_Column_RadioButtons {

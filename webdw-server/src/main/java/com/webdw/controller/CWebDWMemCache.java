@@ -17,7 +17,7 @@ public class CWebDWMemCache {
 	// 在内存中存储数据窗口对象
 	// 未来可能改造为使用Redis进行存储
 	// 暂时未考虑过期问题
-	public static void saveParentDW(DataWindowController parentdw) {
+	public static void saveDataWindowController(DataWindowController parentdw) {
 		objStore.put(parentdw.uuid, parentdw);
 		System.out.println("hashMap.size():" + objStore.size());
 	}

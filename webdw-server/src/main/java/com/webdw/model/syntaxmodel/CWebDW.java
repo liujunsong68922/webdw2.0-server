@@ -1,8 +1,8 @@
-package com.webdw.model;
+package com.webdw.model.syntaxmodel;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.exception.WebDWException;
-import com.webdw.model.dwsyntax.WebDWSyntax;
+import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
 
 /**
  * CWebDW 是WebDW的操作包装类,主要的操作封装在CWebDW_Create这个类里头

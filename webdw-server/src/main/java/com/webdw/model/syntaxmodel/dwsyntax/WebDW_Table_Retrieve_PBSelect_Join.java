@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'������Ӷ���
 public class WebDW_Table_Retrieve_PBSelect_Join {

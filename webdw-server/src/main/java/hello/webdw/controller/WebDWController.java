@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.webdw.controller.DataWindowController;
+import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
 import com.webdw.common.MyInt;
 import com.webdw.controller.CWebDWMemCache;
-import com.webdw.model.dwsyntax.WebDWSyntax;
 import com.webdw.view.ui.container.MyJPanel;
 
 /**
@@ -32,36 +32,22 @@ public class WebDWController {
 	 * @return
 	 */
 	@GetMapping(path = "/")
-	public @ResponseBody String getAllUsers() {
+	public @ResponseBody String Welcome() {
 		// This returns a JSON or XML with the users
 		String a = "Welcome to webdw's world!";
 		return a;
 	}
 
-	/**
-	 * setdataobject function
-	 * 
-	 * @param dwname
-	 *            ���ݴ��ڶ���
-	 * @return
-	 */
 	@GetMapping(path = "/setdataobject")
 	public @ResponseBody WebDWControllerRet SetDataobject(@RequestParam String dwname) throws Exception {
+
 		DataWindowController webdwui = new DataWindowController();
-		WebDWControllerRet ret = new WebDWControllerRet();
+		webdwui.DW_SetDataObjectByName(dwname);
 
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-
-		webdwui.DW_SetDataObjectByName(retList, targPict, dwname);
 		System.out.println(webdwui.errString);
-		System.out.println(retList.size());
 
-		ret.uuid = webdwui.uuid;
-		ret.uiobjList = retList;
-
-		CWebDWMemCache.saveParentDW(webdwui);
-		return ret;
+		CWebDWMemCache.saveDataWindowController(webdwui);
+		return webdwui.generateReturnObject();
 	}
 
 	/**
@@ -75,24 +61,15 @@ public class WebDWController {
 	public @ResponseBody WebDWControllerRet Retrieve(@RequestParam String dwname,
 			@RequestParam String args) throws Exception {
 		DataWindowController webdwui = new DataWindowController();
-		WebDWControllerRet ret = new WebDWControllerRet();
 
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-
-		webdwui.DW_SetDataObjectByName(retList, targPict, dwname);
+		webdwui.DW_SetDataObjectByName(dwname);
 		System.out.println(webdwui.errString);
-		System.out.println(retList.size());
 
 		System.out.println("begin to call retrieve function");
 		// set DataBuffer
 		webdwui.DW_Retrieve(args);
-
-		CWebDWMemCache.saveParentDW(webdwui);
-		// System.out.println("rowcount:" + webdwui.DW_RowCount());
-		ret.uuid = webdwui.uuid;
-		ret.uiobjList = retList;
-		return ret;
+		CWebDWMemCache.saveDataWindowController(webdwui);
+		return webdwui.generateReturnObject();
 	}
 
 	/**
@@ -109,15 +86,15 @@ public class WebDWController {
 
 		ArrayList retList = new ArrayList();
 		MyJPanel targPict = new MyJPanel("targPict");
-		webdwui.targetControls = retList;
-		webdwui.targetPict = targPict;
+		//webdwui.targetControls = retList;
+//		webdwui.targetPict = targPict;
 
 		webdwui.DW_InsertRow(0);
-		webdwui.DrawDW();
+//		webdwui.GenerateViewModel();
 		WebDWControllerRet ret = new WebDWControllerRet();
 
 		ret.uuid = uuid;
-		ret.uiobjList = webdwui.targetControls;
+		ret.uiobjList = webdwui.model.webdwviewmodel.targetControls;
 		return ret;
 	}
 
@@ -129,15 +106,15 @@ public class WebDWController {
 
 		ArrayList retList = new ArrayList();
 		MyJPanel targPict = new MyJPanel("targPict");
-		webdwui.targetControls = retList;
-		webdwui.targetPict = targPict;
+		//webdwui.targetControls = retList;
+//		webdwui.targetPict = targPict;
 
 		webdwui.DW_DeleteRow(rowid);
-		webdwui.DrawDW();
+//		webdwui.GenerateViewModel();
 		WebDWControllerRet ret = new WebDWControllerRet();
 
 		ret.uuid = uuid;
-		ret.uiobjList = webdwui.targetControls;
+		ret.uiobjList = webdwui.model.webdwviewmodel.targetControls;
 		return ret;
 	}
 
@@ -148,18 +125,8 @@ public class WebDWController {
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-		webdwui.targetControls = retList;
-		webdwui.targetPict = targPict;
-
 		webdwui.DW_SetItem(rowid, colid, data);
-		// webdwui.DrawDW();
-		WebDWControllerRet ret = new WebDWControllerRet();
-
-		ret.uuid = uuid;
-		ret.uiobjList = webdwui.targetControls;
-		return ret;
+		return webdwui.generateReturnObject();
 	}
 
 	@GetMapping(path = "/update")
@@ -168,17 +135,11 @@ public class WebDWController {
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-		webdwui.targetControls = retList;
-		webdwui.targetPict = targPict;
-
 		webdwui.DW_Update();
-		webdwui.DrawDW();
 		WebDWControllerRet ret = new WebDWControllerRet();
 
 		ret.uuid = uuid;
-		ret.uiobjList = webdwui.targetControls;
+		ret.uiobjList = webdwui.model.webdwviewmodel.targetControls;
 		return ret;
 	}
 }

@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 // '
 // 'column的支持属性定义，
 // '从配置文件中读入到这个结构中

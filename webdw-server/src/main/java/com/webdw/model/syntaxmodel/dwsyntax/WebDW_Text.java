@@ -1,4 +1,4 @@
-package com.webdw.model.dwsyntax;
+package com.webdw.model.syntaxmodel.dwsyntax;
 
 //'text��֧�����Զ���
 //'�������ļ��ж��뵽����ṹ��

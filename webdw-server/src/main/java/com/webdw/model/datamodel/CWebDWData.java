@@ -1,8 +1,8 @@
-package com.webdw.model;
+package com.webdw.model.datamodel;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
-import com.webdw.model.dwstore.CWebDWData_DataBuffer;
+import com.webdw.model.datamodel.dwstore.CWebDWData_DataBuffer;
 
 public class CWebDWData extends Golbal {
 	public String _ReadMe = "WebDW DataBuffer Operator";

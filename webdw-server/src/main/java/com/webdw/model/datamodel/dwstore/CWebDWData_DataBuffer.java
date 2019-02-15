@@ -1,4 +1,4 @@
-package com.webdw.model.dwstore;
+package com.webdw.model.datamodel.dwstore;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;

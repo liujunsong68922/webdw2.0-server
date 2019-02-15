@@ -13,8 +13,8 @@ import com.webdw.controller.DataWindowController;
 import com.webdw.common.MyInt;
 import com.webdw.common.exception.WebDWException;
 import com.webdw.controller.CWebDWMemCache;
-import com.webdw.model.CWebDW;
-import com.webdw.model.dwsyntax.WebDWSyntax;
+import com.webdw.model.syntaxmodel.CWebDW;
+import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
 import com.webdw.view.ui.container.MyJPanel;
 
 /**
