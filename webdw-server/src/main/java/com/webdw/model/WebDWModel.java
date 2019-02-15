@@ -1,5 +1,6 @@
 package com.webdw.model;
 
+import com.webdw.common.exception.WebDWException;
 import com.webdw.model.datamodel.CWebDWData;
 import com.webdw.model.syntaxmodel.CWebDW;
 import com.webdw.model.viewmodel.CWebDWViewModel;
@@ -21,7 +22,7 @@ public class WebDWModel {
 
 	// 生成视图模型对象
 	// 这是WebDWModel对象对外提供的唯一可调用方法
-	public void GenerateViewModel() throws Exception {
+	public void GenerateViewModel() throws WebDWException {
 		
 		//初始化视图模型对象
 		this.webdwviewmodel = new CWebDWViewModel(

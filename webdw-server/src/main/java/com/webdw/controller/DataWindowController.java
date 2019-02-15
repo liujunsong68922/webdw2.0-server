@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
+import com.webdw.common.exception.WebDWException;
 import com.webdw.common.util.SQLStringReplaceUtil;
 import com.webdw.model.WebDWModel;
 import com.webdw.model.datamodel.CWebDWData;
@@ -29,6 +30,9 @@ public class DataWindowController extends Golbal {
 	public WebDWModel model = new WebDWModel();
 
 	private MyInt iret = new MyInt(0);//
+
+	// 返回对象
+	public WebDWControllerRet retObject = new WebDWControllerRet();
 
 	public DataWindowController() {
 	}
@@ -56,7 +60,7 @@ public class DataWindowController extends Golbal {
 
 	}
 
-	public int DW_Retrieve(String args) throws Exception {
+	public int DW_Retrieve(String args) {
 		String strsql = "";// As String
 		String sdata = "";// As String
 		String argArray[] = new String[1];// As Variant
@@ -77,58 +81,72 @@ public class DataWindowController extends Golbal {
 		// 参数替换
 		strsql = strUtil.Replace(strsql, selectargs, args);
 
-		// 执行Select SQL,返回结果
-		DBSelectOper dboper = new DBSelectOper();
-		sdata = dboper.executeSelect(strsql);
+		try {
+			// 执行Select SQL,返回结果
+			DBSelectOper dboper = new DBSelectOper();
+			sdata = dboper.executeSelect(strsql);
 
-		_SetData(sdata, "normal");
-		 model.GenerateViewModel();
+			_SetData(sdata, "normal");
+			model.GenerateViewModel();
+			this.retObject.status = 200;
+			this.retObject.message = "DW.Retrieve OK.";
+		} catch (WebDWException e) {
+			this.retObject.status = 500;
+			this.retObject.message = "DW.Retrieve Error:" + e.getErrString();
+		}
+
+		// generate output object
+		this.generateReturnObject();
 		return 0;
 	}
 
-	private int _SetDataObject(String sdwName) {
-		try {
+	private int _SetDataObject(String sdwName) throws WebDWException {
+		this.dwname = sdwName;
 
-			this.dwname = sdwName;
+		int iret = 0;
+		String columnString = "";// As String
+		iret = this.model.webdw.CreateByDwName(sdwName);
 
-			int iret = 0;
-			String columnString = "";// As String
-			iret = this.model.webdw.CreateByDwName(sdwName);
-
-			// check whether datawindow create success.
-			if (iret == -1) {
-				errString = this.model.webdw.errString;
-				throw new Exception("error when create datawindow");
-			}
-
-			columnString = this.model.webdw.GetColumnDefineString();
-			iret = model.webdwData.InitData(columnString);
-
-			if (iret == -1) {
-				errString = model.webdwData.errString;
-				throw new Exception("error when init WebDWData object");
-			}
-
-			int maxwidth = 0;// As Long
-			maxwidth = (int) (this.model.webdw.getMaxWidth());
-
-			// 'step 5
-			System.out.println("begin drawDW");
-			model.GenerateViewModel();//
-
-			return 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-			// this.targetControls = null;
-			return -1;
+		// check whether datawindow create success.
+		if (iret == -1) {
+			errString = this.model.webdw.errString;
+			throw new WebDWException("error when create datawindow");
 		}
+
+		columnString = this.model.webdw.GetColumnDefineString();
+		iret = model.webdwData.InitData(columnString);
+
+		if (iret == -1) {
+			errString = model.webdwData.errString;
+			throw new WebDWException("error when init WebDWData object");
+		}
+
+		int maxwidth = 0;// As Long
+		maxwidth = (int) (this.model.webdw.getMaxWidth());
+
+		// 'step 5
+		System.out.println("begin drawDW");
+		model.GenerateViewModel();//
+
+		// step6 generate output object
+		this.generateReturnObject();
+
+		return 0;
 
 	}
 
 	public int DW_SetDataObjectByName(String sdwName) {
 		this.dwname = sdwName;
 		this.uuid = UUID.randomUUID().toString();
-		return _SetDataObject(sdwName);
+		try {
+			this.retObject.status = 200;
+			this.retObject.message = "DW.SetDataObject OK.";
+			return _SetDataObject(sdwName);
+		} catch (WebDWException e) {
+			this.retObject.status = 500;
+			this.retObject.message = "DW.SetDataObject Error:" + e.getErrString();
+			return 0;
+		}
 	}
 
 	private int _SetData(String indata, String datastate) {
@@ -172,6 +190,10 @@ public class DataWindowController extends Golbal {
 		} else {
 		}
 		model.GenerateViewModel();
+
+		this.retObject.status = 200;
+		this.retObject.message = "DW.Insert OK.";
+		this.generateReturnObject();
 		return iret;
 	}
 
@@ -189,7 +211,11 @@ public class DataWindowController extends Golbal {
 		}
 
 		this.DW_Update();
-		model.GenerateViewModel();
+
+		// 生成返回对象
+		this.retObject.status = 200;
+		this.retObject.message = "DW.Delete OK.";
+		this.generateReturnObject();
 
 		return 0;
 	}
@@ -205,7 +231,7 @@ public class DataWindowController extends Golbal {
 		return iret;
 	}
 
-	public int DW_Update() throws Exception {
+	public int DW_Update() {
 		String strsql = "";// As String
 		strsql = this._DW_GetSQLPreview(iret);
 		System.out.println("strsql:" + strsql);
@@ -219,23 +245,35 @@ public class DataWindowController extends Golbal {
 
 		System.out.println("length:" + cmds.length);
 
-		DBModifyOper dboper = new DBModifyOper();
-		for (String sql : cmds) {
-			dboper.executeModify(sql);
+		try {
+			DBModifyOper dboper = new DBModifyOper();
+			for (String sql : cmds) {
+				dboper.executeModify(sql);
+			}
+
+			this.model.webdwData.AfterUpdate();
+			this.model.GenerateViewModel();
+			this.retObject.status = 200;
+			this.retObject.message = "DW.Update OK.";
+			this.generateReturnObject();
+			return 0;
+		} catch (WebDWException e) {
+			this.retObject.status = 500;
+			this.retObject.message = "DW.Update Error:" + e.getErrString();
+			this.generateReturnObject();
+			e.printStackTrace();
+			return 0;
 		}
 
-		model.GenerateViewModel();
-		return 0;
 	}
-	
+
 	/**
 	 * 生成返回的视图模型对象
+	 * 
 	 * @return
 	 */
-	public WebDWControllerRet generateReturnObject() {
-		WebDWControllerRet ret = new WebDWControllerRet();
-		ret.uuid = this.uuid;
-		ret.uiobjList = this.model.webdwviewmodel.targetControls;
-		return ret;
+	private void generateReturnObject() {
+		this.retObject.uuid = this.uuid;
+		this.retObject.uiobjList = this.model.webdwviewmodel.targetControls;
 	}
 }

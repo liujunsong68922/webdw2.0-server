@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
+import com.webdw.common.exception.WebDWException;
 import com.webdw.controller.DataWindowController;
 import com.webdw.model.datamodel.CWebDWData;
 import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
@@ -58,12 +59,7 @@ public class CWebDWViewModel extends Golbal {
 		this.myControls = new MyUIComponent[10001];
 	}
 
-	public int DrawDW() throws Exception {
-		if (targetControls == null || targetPict == null) {
-			errString = "Please Call SetDataObject First";
-			throw new Exception(errString);
-		}
-
+	public int DrawDW() throws WebDWException {
 		int rowid = 0;// As Long
 		int iret = 0;// As Long
 		int i = 0;// As Long

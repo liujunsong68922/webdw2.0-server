@@ -40,10 +40,6 @@ public class CWebDWData_DataBuffer extends Golbal {
 
 	public int ColLength; // 'ÿһ�еĴ洢����
 
-	// '�����������ӵ�ǰ�����ݼ�����ɾ��һ�м�¼
-	// '������¼��ǰ�ƶ�һ����¼
-	// '����0 ɾ���ɹ�
-	// '����-1 ɾ��ʧ��
 	public int DeleteRow(int delRowId) {
 		// '�ж�delrowid�ĺϷ���
 		if (delRowId <= 0 || delRowId > RowNumber) {
@@ -66,7 +62,7 @@ public class CWebDWData_DataBuffer extends Golbal {
 			DataArray[(rowid - 1) * ColLength + colid] = "";
 		}
 
-		RowNumber = RowNumber - 1; // '��������1
+		RowNumber = RowNumber - 1; 
 		return 0;
 	}
 

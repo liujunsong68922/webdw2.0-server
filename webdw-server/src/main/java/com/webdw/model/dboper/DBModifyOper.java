@@ -5,6 +5,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
+import com.webdw.common.exception.WebDWException;
+
 /**
  * 执行数据库上的Modify命令，不返回数据
  * @author Administrator
@@ -37,7 +39,7 @@ public class DBModifyOper {
 	 * @param strsql
 	 * @return
 	 */
-	public long executeModify(String strsql) {
+	public long executeModify(String strsql) throws WebDWException {
 		
 		try {
 			//打开数据库连接
@@ -64,8 +66,8 @@ public class DBModifyOper {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new WebDWException("SQL Error:"+strsql);
 		}
-		return 0;
 	}
 		
 	

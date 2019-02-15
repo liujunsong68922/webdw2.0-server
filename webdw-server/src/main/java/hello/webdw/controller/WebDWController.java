@@ -39,7 +39,7 @@ public class WebDWController {
 	}
 
 	@GetMapping(path = "/setdataobject")
-	public @ResponseBody WebDWControllerRet SetDataobject(@RequestParam String dwname) throws Exception {
+	public @ResponseBody WebDWControllerRet SetDataobject(@RequestParam String dwname) {
 
 		DataWindowController webdwui = new DataWindowController();
 		webdwui.DW_SetDataObjectByName(dwname);
@@ -47,7 +47,7 @@ public class WebDWController {
 		System.out.println(webdwui.errString);
 
 		CWebDWMemCache.saveDataWindowController(webdwui);
-		return webdwui.generateReturnObject();
+		return webdwui.retObject;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class WebDWController {
 		// set DataBuffer
 		webdwui.DW_Retrieve(args);
 		CWebDWMemCache.saveDataWindowController(webdwui);
-		return webdwui.generateReturnObject();
+		return webdwui.retObject;
 	}
 
 	/**
@@ -84,18 +84,9 @@ public class WebDWController {
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-		//webdwui.targetControls = retList;
-//		webdwui.targetPict = targPict;
 
 		webdwui.DW_InsertRow(0);
-//		webdwui.GenerateViewModel();
-		WebDWControllerRet ret = new WebDWControllerRet();
-
-		ret.uuid = uuid;
-		ret.uiobjList = webdwui.model.webdwviewmodel.targetControls;
-		return ret;
+		return webdwui.retObject;
 	}
 
 	@GetMapping(path = "/delete")
@@ -104,18 +95,9 @@ public class WebDWController {
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
-		ArrayList retList = new ArrayList();
-		MyJPanel targPict = new MyJPanel("targPict");
-		//webdwui.targetControls = retList;
-//		webdwui.targetPict = targPict;
-
 		webdwui.DW_DeleteRow(rowid);
-//		webdwui.GenerateViewModel();
-		WebDWControllerRet ret = new WebDWControllerRet();
 
-		ret.uuid = uuid;
-		ret.uiobjList = webdwui.model.webdwviewmodel.targetControls;
-		return ret;
+		return webdwui.retObject;
 	}
 
 	@GetMapping(path = "/setdata")
@@ -126,7 +108,7 @@ public class WebDWController {
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
 		webdwui.DW_SetItem(rowid, colid, data);
-		return webdwui.generateReturnObject();
+		return webdwui.retObject;
 	}
 
 	@GetMapping(path = "/update")
@@ -136,10 +118,6 @@ public class WebDWController {
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
 		webdwui.DW_Update();
-		WebDWControllerRet ret = new WebDWControllerRet();
-
-		ret.uuid = uuid;
-		ret.uiobjList = webdwui.model.webdwviewmodel.targetControls;
-		return ret;
+		return webdwui.retObject;
 	}
 }

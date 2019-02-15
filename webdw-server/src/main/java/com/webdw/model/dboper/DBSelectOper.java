@@ -5,6 +5,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
+import com.webdw.common.exception.WebDWException;
+
 /**
  * 执行数据库上的SELECT命令，按照指定格式返回对应数据
  * @author Administrator
@@ -79,15 +81,14 @@ public class DBSelectOper {
 
 
 	
-	public String executeSelect(String strsql) {
+	public String executeSelect(String strsql) throws WebDWException {
 		System.out.println(strsql);
 		try {
 			return this.getStringReturnValue(strsql);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new WebDWException("SQL Error:"+strsql);
 		}
-		return "";
 	}
 		
 	
