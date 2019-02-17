@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
+import com.webdw.common.exception.WebDWAuthorizedException;
 import com.webdw.common.exception.WebDWException;
 import com.webdw.common.util.SQLStringReplaceUtil;
 import com.webdw.model.WebDWModel;
@@ -18,11 +19,12 @@ import com.webdw.view.ui.MyUIComponent;
 import com.webdw.view.ui.container.MyJPanel;
 
 import hello.webdw.controller.WebDWControllerRet;
+import hello.webdw.dbutil.WebDWDBUtil;
 
 public class DataWindowController extends Golbal {
 	private String _ReadMe = "Datawindow Controller,simulate PB Datawindow Controller";
 
-	private String dwname = "";
+	public String dwname = "";
 	public String uuid = "";
 	public String errString = "";//
 
@@ -60,7 +62,17 @@ public class DataWindowController extends Golbal {
 
 	}
 
-	public int DW_Retrieve(String args) {
+	public int DW_Retrieve(String username,String args) throws WebDWAuthorizedException  {
+		//add Retrieve privileges check
+		System.out.println("dwname:"+this.dwname);
+		boolean isAuthorized = false;
+		isAuthorized = new WebDWDBUtil().checkUserDwOper(username, this.dwname, "Retrieve");
+		
+		System.out.println("Authorized:"+isAuthorized);
+		if(! isAuthorized) {
+			throw new WebDWAuthorizedException("Unauthorized call."+this.dwname+".Retrieve");
+		}
+		
 		String strsql = "";// As String
 		String sdata = "";// As String
 		String argArray[] = new String[1];// As Variant
@@ -135,7 +147,14 @@ public class DataWindowController extends Golbal {
 
 	}
 
-	public int DW_SetDataObjectByName(String sdwName) {
+	public int DW_SetDataObjectByName(String username, String sdwName) throws  WebDWAuthorizedException {
+		boolean isAuthorized = false;
+		isAuthorized = new WebDWDBUtil().checkUserDwOper(username, sdwName, "SetDataObject");
+		
+		if(! isAuthorized) {
+			throw new WebDWAuthorizedException("Unauthorized call. "+sdwName+"."+"SetDataObject");
+		}
+		
 		this.dwname = sdwName;
 		this.uuid = UUID.randomUUID().toString();
 		try {
@@ -167,8 +186,15 @@ public class DataWindowController extends Golbal {
 		return 0;
 	}
 
-	public int DW_InsertRow(int rowid) throws Exception {
-
+	public int DW_InsertRow(String username,int rowid) throws Exception {
+		//step1.check authorized
+		boolean isAuthorized = false;
+		isAuthorized = new WebDWDBUtil().checkUserDwOper(username, this.dwname, "InsertRow");
+		
+		if(! isAuthorized) {
+			throw new WebDWException("Unauthorized call. "+this.dwname+"."+"InsertRow");
+		}
+		
 		String emptystring = "";// As String
 		int colid = 0;// As Long
 		int colNum = 0;// As Long
@@ -197,7 +223,14 @@ public class DataWindowController extends Golbal {
 		return iret;
 	}
 
-	public int DW_DeleteRow(int rowid) throws Exception {
+	public int DW_DeleteRow(String username,int rowid) throws WebDWAuthorizedException {
+		boolean isAuthorized = false;
+		isAuthorized = new WebDWDBUtil().checkUserDwOper(username, this.dwname, "DeleteRow");
+		
+		if(! isAuthorized) {
+			throw new WebDWAuthorizedException("Unauthorized call. "+this.dwname+"."+"DeleteRow");
+		}
+		
 		if (rowid <= 0) {
 			return 0;
 		}
@@ -210,7 +243,7 @@ public class DataWindowController extends Golbal {
 			return -1;
 		}
 
-		this.DW_Update();
+		this.DW_Update(username);
 
 		// 生成返回对象
 		this.retObject.status = 200;
@@ -231,7 +264,16 @@ public class DataWindowController extends Golbal {
 		return iret;
 	}
 
-	public int DW_Update() {
+	public int DW_Update(String username) throws WebDWAuthorizedException {
+
+		//step1.check authorized
+		boolean isAuthorized = false;
+		isAuthorized = new WebDWDBUtil().checkUserDwOper(username, this.dwname, "Update");
+		
+		if(! isAuthorized) {
+			throw new WebDWAuthorizedException("Unauthorized call. "+this.dwname+"."+"Update");
+		}		
+		
 		String strsql = "";// As String
 		strsql = this._DW_GetSQLPreview(iret);
 		System.out.println("strsql:" + strsql);
