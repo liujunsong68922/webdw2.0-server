@@ -172,7 +172,7 @@ public class WebDWController {
 		return webdwui.retObject;
 	}
 
-	@GetMapping(path = "/delete")
+	@GetMapping(path = "/deleterow")
 	public @ResponseBody WebDWControllerRet dw_f4_DeleteRow(@RequestParam String token, @RequestParam String uuid,
 			@RequestParam int rowid) {
 		// step1:get username
