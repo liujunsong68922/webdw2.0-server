@@ -20,4 +20,14 @@ public class WebDWControllerRet {
 	//uiobjList is the ui object model generate by controller.
 	public ArrayList uiobjList= new ArrayList();
 	
+	/**
+	 * 设置错误信息
+	 * @param msg
+	 */
+	public void setErrorMsg(int errStatus,String msg) {
+		this.status = errStatus;
+		this.message = msg;
+		this.uuid ="";
+		this.uiobjList = new ArrayList();
+	}
 }

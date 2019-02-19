@@ -21,14 +21,15 @@ import hello.webdw.dbutil.WebDWDBUtil;
 /**
  * WebDW Controller
  * 
- * @author Liu JunSong(liujunsong@aliyun.com)
+ * @author Liu JunSong
+ * @email liujunsong@aliyun.com
  * @Date:2018/12/8
  * @version:1.0 访问路径/webdw/
  * 
  */
 
 @Controller // This means that this class is a Controller
-@RequestMapping(path = "/") // This means URL's start with /demo (after Application path)
+@RequestMapping(path = "/") // 
 public class WebDWController {
 	// 是否支持默认用户，如果不支持则会报错
 	private boolean CONST_DEFAULT_USER_ALLOW = true;
@@ -36,52 +37,44 @@ public class WebDWController {
 	private String CONST_DEFAULT_USERNAME = "guest";
 
 	/**
-	 * test only function,show a string value;
+	 * 测试页面，显示欢迎字符串
 	 * 
 	 * @return
 	 */
 	@GetMapping(path = "/")
-	public @ResponseBody String Welcome() {
-		// This returns a JSON or XML with the users
+	public @ResponseBody String index() {
 		String a = "Welcome to webdw's world!";
 		return a;
 	}
 
+	/**
+	 * 设置数据窗口对象，控件初始化
+	 * 
+	 * @param token
+	 * @param dwname
+	 * @return
+	 */
 	@GetMapping(path = "/setdataobject")
-	public @ResponseBody WebDWControllerRet SetDataobject(@RequestParam String token, @RequestParam String dwname) {
-
+	public @ResponseBody WebDWControllerRet dw_f1_SetDataObject(@RequestParam String token,
+			@RequestParam String dwname) {
 		// step1:get username
 		String username = new WebDWDBUtil().getUserNameByToken(token);
-
 		// 设置默认用户名，方便系统功能测试，默认用户名为guest
 		if (username == "") {
 			if (this.CONST_DEFAULT_USER_ALLOW) {
 				username = this.CONST_DEFAULT_USERNAME;
-			}else {
-				//token 失效，返回错误信息
-				WebDWControllerRet ret = new WebDWControllerRet();
-				ret.status = 500;
-				ret.message = "Token Invalid";
-				ret.uuid ="";
-				ret.uiobjList = new ArrayList();
-				return ret;
+			} else {
+				return new WebDWControllerErrorRet(500, "Token 无效");
 			}
 		}
 
 		DataWindowController webdwui = new DataWindowController();
 		try {
-			webdwui.DW_SetDataObjectByName(username,dwname);
+			webdwui.DW_SetDataObjectByName(username, dwname);
 		} catch (WebDWAuthorizedException e) {
-			WebDWControllerRet ret = new WebDWControllerRet() ;
-			ret.status = 500;
-			ret.message = e.getErrString();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getErrString());
 			return ret;
-			
 		}
-
-		System.out.println(webdwui.errString);
 
 		CWebDWMemCache.saveDataWindowController(webdwui);
 		return webdwui.retObject;
@@ -95,10 +88,8 @@ public class WebDWController {
 	 * @return
 	 */
 	@GetMapping(path = "/retrieve")
-	public @ResponseBody WebDWControllerRet Retrieve(
-			@RequestParam String token,
-			@RequestParam String dwname, @RequestParam String args)
-			{
+	public @ResponseBody WebDWControllerRet dw_f2_Retrieve(@RequestParam String token, @RequestParam String dwname,
+			@RequestParam String args) {
 		// step1:get username
 		String username = new WebDWDBUtil().getUserNameByToken(token);
 
@@ -106,31 +97,22 @@ public class WebDWController {
 		if (username == "") {
 			if (this.CONST_DEFAULT_USER_ALLOW) {
 				username = this.CONST_DEFAULT_USERNAME;
-			}else {
-				//token 失效，返回错误信息
-				WebDWControllerRet ret = new WebDWControllerRet();
-				ret.status = 500;
-				ret.message = "Token Invalid";
-				ret.uuid ="";
-				ret.uiobjList = new ArrayList();
+			} else {
+				// token 失效，返回错误信息
+				WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, "Token 失效");
 				return ret;
 			}
 		}
-		
+
 		DataWindowController webdwui = new DataWindowController();
 
-		//step2. call SetDataObject
+		// step2. call SetDataObject
 		try {
-			webdwui.DW_SetDataObjectByName(username,dwname);
+			webdwui.DW_SetDataObjectByName(username, dwname);
 		} catch (WebDWAuthorizedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			//token 失效，返回错误信息
-			WebDWControllerRet ret = new WebDWControllerRet();
-			ret.status = 500;
-			ret.message = e.getErrString();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
+			// token 失效，返回错误信息
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getErrString());
 			return ret;
 		}
 		System.out.println(webdwui.errString);
@@ -138,17 +120,13 @@ public class WebDWController {
 		System.out.println("begin to call retrieve function");
 		// set DataBuffer
 		try {
-			webdwui.DW_Retrieve(username,args);
+			webdwui.DW_Retrieve(username, args);
 		} catch (WebDWAuthorizedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			WebDWControllerRet ret = new WebDWControllerRet();
-			ret.status = 500;
-			ret.message = e.getErrString();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getErrString());
 			return ret;
 		}
+		// save datawindow object to cache
 		CWebDWMemCache.saveDataWindowController(webdwui);
 		return webdwui.retObject;
 	}
@@ -160,10 +138,8 @@ public class WebDWController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(path = "/insert")
-	public @ResponseBody WebDWControllerRet Insert(
-			@RequestParam String token,
-			@RequestParam String uuid) {
+	@GetMapping(path = "/insertrow")
+	public @ResponseBody WebDWControllerRet dw_f3_InsertRow(@RequestParam String token, @RequestParam String uuid) {
 
 		// step1:get username
 		String username = new WebDWDBUtil().getUserNameByToken(token);
@@ -172,49 +148,33 @@ public class WebDWController {
 		if (username == "") {
 			if (this.CONST_DEFAULT_USER_ALLOW) {
 				username = this.CONST_DEFAULT_USERNAME;
-			}else {
-				//token 失效，返回错误信息
-				WebDWControllerRet ret = new WebDWControllerRet();
-				ret.status = 500;
-				ret.message = "Token Invalid";
-				ret.uuid ="";
-				ret.uiobjList = new ArrayList();
-				return ret;
+			} else {
+				// token 失效，返回错误信息
+				return new WebDWControllerErrorRet(500, "Token 失效");
 			}
-		}		
-		
-		
+		}
+
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
 		try {
-			webdwui.DW_InsertRow(username,0);
+			webdwui.DW_InsertRow(username, 0);
 		} catch (WebDWException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			//token 失效，返回错误信息
-			WebDWControllerRet ret = new WebDWControllerRet();
-			ret.status = 500;
-			ret.message = e.getErrString();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
+			// token 失效，返回错误信息
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getErrString());
 			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
-			WebDWControllerRet ret = new WebDWControllerRet();
-			ret.status = 500;
-			ret.message = e.getMessage();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
-			return ret;			
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getMessage());
+			return ret;
 		}
 		return webdwui.retObject;
 	}
 
 	@GetMapping(path = "/delete")
-	public @ResponseBody WebDWControllerRet Delete(
-			@RequestParam String token,@RequestParam String uuid, @RequestParam int rowid)
-			{
+	public @ResponseBody WebDWControllerRet dw_f4_DeleteRow(@RequestParam String token, @RequestParam String uuid,
+			@RequestParam int rowid) {
 		// step1:get username
 		String username = new WebDWDBUtil().getUserNameByToken(token);
 
@@ -222,42 +182,28 @@ public class WebDWController {
 		if (username == "") {
 			if (this.CONST_DEFAULT_USER_ALLOW) {
 				username = this.CONST_DEFAULT_USERNAME;
-			}else {
-				//token 失效，返回错误信息
-				WebDWControllerRet ret = new WebDWControllerRet();
-				ret.status = 500;
-				ret.message = "Token Invalid";
-				ret.uuid ="";
-				ret.uiobjList = new ArrayList();
-				return ret;
+			} else {
+				// token 失效，返回错误信息
+				return new WebDWControllerErrorRet(500, "Token 无效");
 			}
-		}		
-		
-		
+		}
+
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
 		try {
-			webdwui.DW_DeleteRow(username,rowid);
+			webdwui.DW_DeleteRow(username, rowid);
 		} catch (WebDWAuthorizedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			//token 失效，返回错误信息
-			WebDWControllerRet ret = new WebDWControllerRet();
-			ret.status = 500;
-			ret.message = e.getErrString();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
-			return ret;
+			return new WebDWControllerErrorRet(500, e.getErrString());
 		}
-
 		return webdwui.retObject;
 	}
 
-	@GetMapping(path = "/setdata")
-	public @ResponseBody WebDWControllerRet SetData(@RequestParam String uuid, @RequestParam int rowid,
+	@GetMapping(path = "/setitem")
+	public @ResponseBody WebDWControllerRet dw_f6_SetItem(@RequestParam String uuid, @RequestParam int rowid,
 			@RequestParam int colid, @RequestParam String data) throws Exception {
-		System.out.println("enter SetData rowid:" + rowid);
+		System.out.println("enter SetItem rowid:" + rowid);
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
@@ -266,8 +212,7 @@ public class WebDWController {
 	}
 
 	@GetMapping(path = "/update")
-	public @ResponseBody WebDWControllerRet Update(
-			@RequestParam String token,@RequestParam String uuid) {
+	public @ResponseBody WebDWControllerRet dw_f5_Update(@RequestParam String token, @RequestParam String uuid) {
 		System.out.println("enter update...");
 
 		// step1:get username
@@ -277,33 +222,20 @@ public class WebDWController {
 		if (username == "") {
 			if (this.CONST_DEFAULT_USER_ALLOW) {
 				username = this.CONST_DEFAULT_USERNAME;
-			}else {
-				//token 失效，返回错误信息
-				WebDWControllerRet ret = new WebDWControllerRet();
-				ret.status = 500;
-				ret.message = "Token Invalid";
-				ret.uuid ="";
-				ret.uiobjList = new ArrayList();
-				return ret;
+			} else {
+				return new WebDWControllerErrorRet(500, "Token 无效");
 			}
-		}		
-		
+		}
+
 		DataWindowController webdwui = new DataWindowController();
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
 		try {
 			webdwui.DW_Update(username);
 		} catch (WebDWAuthorizedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			
-			//token 失效，返回错误信息
-			WebDWControllerRet ret = new WebDWControllerRet();
-			ret.status = 500;
-			ret.message = e.getErrString();
-			ret.uuid ="";
-			ret.uiobjList = new ArrayList();
-			return ret;
+			// token 失效，返回错误信息
+			return new WebDWControllerErrorRet(500, e.getErrString());
 		}
 		return webdwui.retObject;
 	}
