@@ -3,7 +3,7 @@ package com.webdw.view.ui;
 import java.awt.Rectangle;
 
 /**
- * ����UIԪ�صĳ��࣬�������������UI����
+ * 用一个统一的UI元素来描述所有的UI对象
  * 
  * @author Administrator
  *

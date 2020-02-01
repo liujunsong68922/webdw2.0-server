@@ -16,8 +16,8 @@ public class MyJComboBox extends MyUIElement {
 	//values�������п�ѡ�����ϣ����ݵ�ǰ���γ���������б�����
 	private String values="";
 	
-	//selectedIndex����ʵ��ȡֵ��Ӧ���б��е���ţ���˼���õ������ݵ�ǰ̨����ʾ
-	public int selectedIndex=0;	
+	//selectedIndex，默认值设置为-1
+	public int selectedIndex=-1;	
 
 	//selectedItem
 //	public String selectedItem="";

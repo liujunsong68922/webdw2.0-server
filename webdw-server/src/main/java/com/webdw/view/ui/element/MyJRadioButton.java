@@ -33,6 +33,29 @@ public class MyJRadioButton extends MyUIElement {
 
 	private boolean selected = false;
 	
+	private String valuestring="";
+	
+	//这个radio选中时的value值
+	private String radiovalue="";
+	
+	
+	
+	public String getRadiovalue() {
+		return radiovalue;
+	}
+
+	public void setRadiovalue(String radiovalue) {
+		this.radiovalue = radiovalue;
+	}
+
+	public String getValuestring() {
+		return valuestring;
+	}
+
+	public void setValuestring(String valuestring) {
+		this.valuestring = valuestring;
+	}
+
 	public boolean isSelected() {
 		return selected;
 	}

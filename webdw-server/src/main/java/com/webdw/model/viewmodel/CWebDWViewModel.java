@@ -160,8 +160,8 @@ public class CWebDWViewModel extends Golbal {
 			sname = targetPict.getName() + "__" + lineNum + "__" + local_webdw.column[id].Name;
 			svalue = webdwData.GetItemString(lineNum, id);// '�õ�ԭʼ��Ϣ����
 
-			// Column Ĭ��ΪMyJTextField
-			// ���ݲ�ͬ�༭������ǿ�������滻
+			// Column MyJTextField
+			// 绘制文本框
 			obj = new MyJTextField("", sname, targetControls, targetPict);
 			obj.setRowid(lineNum);
 			obj.setColid(id);
@@ -222,16 +222,19 @@ public class CWebDWViewModel extends Golbal {
 					radioobj = new MyJRadioButton(radioDisplay, sname, targetControls, frameObj);
 					radioobj.setRowid(lineNum);
 					radioobj.setColid(id);
-					radioobj.Tag = radioValue;// '�Ѷ�Ӧֵ����tag��������
+					radioobj.Tag = svalue;// '�Ѷ�Ӧֵ����tag��������
 					radioobj.setBounds((int) (10), (int) ((30 + 60 * radioid)), (int) (obj.getWidth() - 40),
 							(int) (50));
-					// '���ݵ�ǰ�ֶε����ݣ���radioobj��������ݱȽϣ������ͬ��������ѡ��״̬
+					radioobj.setValuestring(valuestring);
+					//保存radioValue的值
+					//radioDisplay的值保存在Text属性里面
+					radioobj.setRadiovalue(radioValue);
+					
+					// 根据获取到的radioDisplay值和svalue判断，判断value值
 					radioobj.Value(radioValue.equals(svalue));
 				}
 			}
-			// '------------------------��ѡ��༭������----------------------------------------
-			//
-			// '------------------------ѡ���༭���ʼ----------------------------------------
+			// 绘制复选框
 			MyJCheckBox myCheckBox;
 			if (valuestring.length() > 0 && local_webdw.column[id].checkbox.text.length() > 0) {
 				sname = targetPict.Name + "__" + lineNum + "__" + local_webdw.column[id].Name + "__CheckBox";
@@ -255,10 +258,8 @@ public class CWebDWViewModel extends Golbal {
 
 				myCheckBox.Value(GF_IF_Long(local_webdw.column[id].checkbox.on.equals(svalue), 1, 0) == 1);
 			}
-			// '------------------------ѡ���༭������----------------------------------------
-			//
-			// '------------------------�����б��༭������----------------------------------------
-
+			
+			// 绘制下拉框
 			MyJComboBox myComboBox;
 			String combovalues[] = new String[1];
 			int combotabpos;

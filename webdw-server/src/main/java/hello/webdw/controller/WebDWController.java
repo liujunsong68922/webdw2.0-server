@@ -74,6 +74,12 @@ public class WebDWController {
 			@RequestParam String args) {
 		return this._Retrieve(token, dwname, args);
 	}
+	
+	@GetMapping(path = "/retrieve2" ,produces = "application/json;charset=iso-8859-1")
+	public @ResponseBody WebDWControllerRet dw_f2_Retrieve2(@RequestParam String token, @RequestParam String dwname,
+			@RequestParam String args) {
+		return this._Retrieve(token, dwname, args);
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/Retrieve", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
