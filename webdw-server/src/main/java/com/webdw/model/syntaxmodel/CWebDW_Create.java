@@ -29,6 +29,15 @@ public class CWebDW_Create extends Golbal {
 		if (strSyntax == null || strSyntax.length() == 0) {
 			throw new WebDWException("Cannot find Datawindow Syntax:" + dwname);
 		}
+		
+		//增加一个特殊判断
+		//Add by liujunsong
+		//2020-05-15
+		//如果数据库中存储的语法字符串是"."，代表跳过这一步
+		if(strSyntax.trim().equals(".")) {
+			//做一个特殊处理.
+			return 0;
+		}
 		return this.CreateBySyntaxString(strSyntax);
 	}
 

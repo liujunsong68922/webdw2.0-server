@@ -15,9 +15,9 @@ import java.awt.Color;
  * 
  */
 public class Golbal extends VBFunction {
-	public static final String JWebDWInfo = "    Author: Liujunsong  \r\n" + "    E_Mail: liujunsong@aliyun.com  \r\n"
-			+ "    http://webdw.vicp.net  \r\n" + "    Info:If You Can See SourceCode and find bug in it  \r\n"
-			+ "    Please contract me.  \r\n";
+	public static final String JWebDWInfo = "    Author: Liujunsong  ." + "    E_Mail: liujunsong@aliyun.com  "
+			+ "    http://webdw.vicp.net  \r\n" + "    Info:If You Can See SourceCode and find bug in it ,"
+			+ "    Please contract me.  ";
 
 	public static String G_ServerURL = "http://localhost/myproj/Table";
 

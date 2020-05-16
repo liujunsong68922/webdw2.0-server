@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
 import com.webdw.common.exception.WebDWException;
+import com.webdw.config.WebDWConfigVO;
 import com.webdw.controller.DataWindowController;
 import com.webdw.model.datamodel.CWebDWData;
 import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
@@ -124,7 +125,7 @@ public class CWebDWViewModel extends Golbal {
 			obj.setBounds((int) ((local_webdw.text[id].x) + leftPos), (int) (top), (int) (local_webdw.text[id].width),
 					(int) (local_webdw.text[id].height));
 
-			obj.setText(Replace(local_webdw.text[id].text, "\r\n", "<BR>"));
+			obj.setText(Replace(local_webdw.text[id].text, WebDWConfigVO.Webdw_DataFormat_Line_Seperator, "<BR>"));
 		}
 		return 0;
 	}

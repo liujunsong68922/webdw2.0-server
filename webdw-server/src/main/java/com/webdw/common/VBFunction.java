@@ -71,7 +71,7 @@ public class VBFunction {
 	}
 
 	/**
-	 * �ṩ��VB����Left��ͬ�Ĺ���,������漸���ַ�������
+	 * VB's Left String Function
 	 * 
 	 * @param instr
 	 * @param i
@@ -86,7 +86,7 @@ public class VBFunction {
 	}
 
 	/**
-	 * �ṩ��VB����Right��ͬ�Ĺ���,������漸���ַ�������
+	 * VB's Right String Function
 	 * 
 	 * @param instr
 	 * @param i
@@ -96,7 +96,7 @@ public class VBFunction {
 		return instr.substring(instr.length() - i);
 	}
 
-	// �õ�ָ��Asc���Ӧ���ַ���
+	// VB's Char Function
 	public String Chr(int i) {
 		if (i == 9)
 			return "\t";

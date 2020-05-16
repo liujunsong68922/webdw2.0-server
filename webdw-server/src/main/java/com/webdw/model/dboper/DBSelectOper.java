@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.Date;
 
 import com.webdw.common.exception.WebDWException;
+import com.webdw.config.WebDWConfigVO;
 
 /**
  * 执行数据库上的SELECT命令，按照指定格式返回对应数据
@@ -48,19 +49,21 @@ public class DBSelectOper {
 		int col=0;
 		for (col = 1; col <= meta.getColumnCount(); col++)
 			if (col < meta.getColumnCount()) {
-				sline = sline + meta.getColumnName(col) + "\t";
+				//列与列之间用列分割符号进行分割
+				sline = sline + meta.getColumnName(col) + WebDWConfigVO.WebDW_DataFormat_Column_Seperator;
 			}else {
 				sline = sline + meta.getColumnName(col);
 			}
 		
 		System.out.println("sline = " + sline);
 		//获取表头
-		sret = sret + sline + "\r\n";
-		for (; rs.next() ; sret = sret + sline + "\r\n") {
+		sret = sret + sline + WebDWConfigVO.Webdw_DataFormat_Line_Seperator;
+		for (; rs.next() ; sret = sret + sline + WebDWConfigVO.Webdw_DataFormat_Line_Seperator) {
 			sline = "";
 			for (col = 1; col <= meta.getColumnCount(); col++)
 				if (col < meta.getColumnCount()) {
-					sline = sline + rs.getString(col) + "\t";
+					//使用指定的列分割符号进行切分
+					sline = sline + rs.getString(col) + WebDWConfigVO.WebDW_DataFormat_Column_Seperator;
 				}else {
 					sline = sline + rs.getString(col);
 				}

@@ -7,6 +7,7 @@ import com.webdw.common.MyInt;
 import com.webdw.common.exception.WebDWAuthorizedException;
 import com.webdw.common.exception.WebDWException;
 import com.webdw.common.util.SQLStringReplaceUtil;
+import com.webdw.config.WebDWConfigVO;
 import com.webdw.model.WebDWModel;
 import com.webdw.model.datamodel.CWebDWData;
 import com.webdw.model.dboper.DBModifyOper;
@@ -102,6 +103,11 @@ public class DataWindowController extends Golbal {
 			model.GenerateViewModel();
 			this.retObject.status = 200;
 			this.retObject.message = "DW.Retrieve OK.";
+			//将结果集合以字符串形式返回
+			this.retObject.strDWData = sdata;
+			//将结果集合转换为ArrayList<LinkedHashMap>形式返回
+			this.retObject.jsonList = this.getDataArrayList(sdata);
+			
 		} catch (WebDWException e) {
 			this.retObject.status = 500;
 			this.retObject.message = "DW.Retrieve Error:" + e.getErrString();
@@ -138,6 +144,7 @@ public class DataWindowController extends Golbal {
 
 		// 'step 5
 		System.out.println("begin drawDW");
+		
 		model.GenerateViewModel();//
 
 		// step6 generate output object
@@ -317,5 +324,37 @@ public class DataWindowController extends Golbal {
 	private void generateReturnObject() {
 		this.retObject.uuid = this.uuid;
 		this.retObject.uiobjList = this.model.webdwviewmodel.targetControls;
+	}
+	
+	private ArrayList getDataArrayList(String sdata) {
+		ArrayList retList = new ArrayList();
+		
+		if(sdata==null || sdata.length()==0) {
+			return retList;
+		}
+		//切换的分割符号改为使用配置类里面定义的行分割符，默认为回车符
+		String data[] = sdata.split(WebDWConfigVO.Webdw_DataFormat_Line_Seperator);
+		if(data.length==0) {
+			return retList;
+		}
+		//第一行代表列名
+		String columns = data[0];
+		//按照WebDW配置对象中定义的列分割符号进行分割切分
+		String column[] = columns.split(WebDWConfigVO.WebDW_DataFormat_Column_Seperator);
+		
+		for(int i=1;i<data.length;i++) {
+			LinkedHashMap map = new LinkedHashMap();
+			//按照WebDW配置对象中定义的列分割符号进行分割切分
+			String row[] = data[i].split(WebDWConfigVO.WebDW_DataFormat_Column_Seperator);
+			for(int j=0;j<column.length;j++) {
+				if(j<row.length) {
+					map.put(column[j],row[j]);
+				}else {
+					map.put(column[j],"");
+				}
+			}
+			retList.add(map);
+		}
+		return retList;
 	}
 }
