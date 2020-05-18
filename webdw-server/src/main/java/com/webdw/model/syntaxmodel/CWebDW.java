@@ -98,4 +98,12 @@ public class CWebDW extends Golbal {
 		}
 		return imax;
 	}
+	
+	public int CreateBySQL(String strsql,String stype) throws WebDWException {
+		int iret = webdw_creator.CreateBySQL(strsql,stype);
+ 		this.dwString = webdw_creator.dwString;
+		this.errString = webdw_creator.errString;
+
+		return iret;
+	}
 }

@@ -74,6 +74,14 @@ public class WebDWController {
 			@RequestParam String args) {
 		return this._Retrieve(token, dwname, args);
 	}
+
+	@GetMapping(path = "/retrievebysql")
+	public @ResponseBody WebDWControllerRet dw_f22_RetrieveBysql
+		(@RequestParam String token, @RequestParam String strsql,
+			@RequestParam String stype) {
+		return this._RetrieveBySQL(token, strsql, stype);
+	}
+
 	
 	@GetMapping(path = "/retrieve2" ,produces = "application/json;charset=iso-8859-1")
 	public @ResponseBody WebDWControllerRet dw_f2_Retrieve2(@RequestParam String token, @RequestParam String dwname,
@@ -326,6 +334,46 @@ public class WebDWController {
 		webdwui = CWebDWMemCache.readParentDW(uuid);
 
 		webdwui.DW_SetItem(rowid, colid, data);
+		return webdwui.retObject;
+	}
+	
+	
+	private WebDWControllerRet _RetrieveBySQL(String token, String strsql, String stype) {
+		// step1:get username
+		String username = new WebDWDBUtil().getUserNameByToken(token);
+
+		// 设置默认用户名，方便系统功能测试，默认用户名为guest
+		if (username == "") {
+			if (this.CONST_DEFAULT_USER_ALLOW) {
+				username = this.CONST_DEFAULT_USERNAME;
+			} else {
+				// token 失效，返回错误信息
+				WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, "Token 失效");
+				return ret;
+			}
+		}
+
+		DataWindowController webdwui = new DataWindowController();
+
+		// step2. 调用webdwui,调用按照SQL语句来进行检索的方法
+		// Warning:这一方法应当避免在生产环境上直接使用，有一定风险
+		try {
+			webdwui.DW_RetrieveBySql(strsql, stype);
+		} catch (WebDWAuthorizedException e) {
+			e.printStackTrace();
+			// token 失效，返回错误信息
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getErrString());
+			return ret;
+		} catch (WebDWException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			WebDWControllerErrorRet ret = new WebDWControllerErrorRet(500, e.getErrString());
+			return ret;
+		}
+		System.out.println(webdwui.errString);
+
+		// save datawindow object to cache
+		CWebDWMemCache.saveDataWindowController(webdwui);
 		return webdwui.retObject;
 	}
 	

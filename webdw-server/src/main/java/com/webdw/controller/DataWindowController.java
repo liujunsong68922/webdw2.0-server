@@ -14,6 +14,7 @@ import com.webdw.model.dboper.DBModifyOper;
 import com.webdw.model.dboper.DBSelectOper;
 import com.webdw.model.dboper.DWConfig;
 import com.webdw.model.syntaxmodel.CWebDW;
+import com.webdw.model.syntaxmodel.CWebDW_SyntaxFromSQL;
 import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
 import com.webdw.view.DataWindowViewModel;
 import com.webdw.view.ui.MyUIComponent;
@@ -357,4 +358,52 @@ public class DataWindowController extends Golbal {
 		}
 		return retList;
 	}
+	
+	/**
+	 * 按照SQL语句来进行检索处理
+	 * [WARNING:]这一方法仅为开发过程提供，不建议在生产环境使用，因为无法判断控制权限
+	 * @param username
+	 * @param args
+	 * @return
+	 * @throws WebDWAuthorizedException
+	 * @throws WebDWException 
+	 */
+	public int DW_RetrieveBySql(String strsql,String stype) throws WebDWAuthorizedException, WebDWException  {
+		//add Retrieve privileges check
+		System.out.println("strsql:"+strsql);
+		System.out.println("stype:"+stype);
+
+		//第一步先利用SQL语句来动态生成数据窗口
+		this.dwname = "dynamic";
+		this.uuid = UUID.randomUUID().toString();
+		
+		//创建webdw内存对象
+		int iret = this.model.webdw.CreateBySQL(strsql,stype);
+		
+		String sdata = "";// As String
+		try {
+			// 执行Select SQL,返回结果
+			DBSelectOper dboper = new DBSelectOper();
+			sdata = dboper.executeSelect(strsql);
+
+			_SetData(sdata, "normal");
+			model.GenerateViewModel();
+			this.retObject.status = 200;
+			this.retObject.message = "DW.Retrieve OK.";
+			//将结果集合以字符串形式返回
+			this.retObject.strDWData = sdata;
+			//将结果集合转换为ArrayList<LinkedHashMap>形式返回
+			this.retObject.jsonList = this.getDataArrayList(sdata);
+			
+		} catch (WebDWException e) {
+			this.retObject.status = 500;
+			this.retObject.message = "DW.Retrieve Error:" + e.getErrString();
+		}
+
+		// generate output object
+		this.generateReturnObject();
+		return 0;
+	
+	}
+
 }

@@ -6,6 +6,7 @@ import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
 import com.webdw.common.VBFunction;
 import com.webdw.common.exception.WebDWException;
+import com.webdw.model.dboper.DBSelectOper;
 import com.webdw.model.dboper.DWConfig;
 import com.webdw.model.syntaxmodel.dwsyntax.WebDWSyntax;
 import com.webdw.model.syntaxmodel.dwsyntax.WebDW_Column;
@@ -699,4 +700,33 @@ public class CWebDW_Create extends Golbal {
 		}
 		return 0;
 	}
+	
+	/**
+	 * 根据SQL语句，数据窗口类型来创建CWebDW
+	 * @param strsql
+	 * @param stype
+	 * @return
+	 * @throws WebDWException 
+	 */
+	public int CreateBySQL(String strsql,String stype) throws WebDWException{
+		//先获取一下所有的数据列的定义
+		String strdbdefilesql = "select TNAME,COLNO,CNAME,COLTYPE,WIDTH from col";
+		DBSelectOper selectOper = new DBSelectOper();
+		String scolumndef = selectOper.executeSelect(strdbdefilesql);
+		
+		CWebDW_SyntaxFromSQL syntaxfromsql = new CWebDW_SyntaxFromSQL();
+		syntaxfromsql.colDefString = scolumndef;
+		
+		MyInt myint = new MyInt(0);
+		syntaxfromsql.SyntaxFromSQL(strsql,stype,myint);
+		if(myint.intvalue<0) {
+			this.errString = syntaxfromsql.errString;
+			return myint.intvalue;
+		}else {
+			this.local_webdw = syntaxfromsql.getLocal_webdw();
+			return 0;
+		}
+		
+	}
+
 }
