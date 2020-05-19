@@ -14,6 +14,7 @@ import com.webdw.view.ui.container.MyJPanel;
 import com.webdw.view.ui.element.MyJCheckBox;
 import com.webdw.view.ui.element.MyJComboBox;
 import com.webdw.view.ui.element.MyJLabel;
+import com.webdw.view.ui.element.MyJLine;
 import com.webdw.view.ui.element.MyJRadioButton;
 import com.webdw.view.ui.element.MyJTextField;
 
@@ -25,8 +26,8 @@ import com.webdw.view.ui.element.MyJTextField;
  * JavaScript(and other language) can use these elements to draw full UI to
  * user.
  * 
- * This is the View Part of MVC model,so that it does not change any data
- * only convert this data to Visual Format.
+ * This is the View Part of MVC model,so that it does not change any data only
+ * convert this data to Visual Format.
  * 
  * All this is done by DrawDW() function.
  * 
@@ -34,27 +35,27 @@ import com.webdw.view.ui.element.MyJTextField;
  *
  */
 public class CWebDWViewModel extends Golbal {
-	//private DataWindowController parentDW = null;
+	// private DataWindowController parentDW = null;
 
 	private String errString = "";//
 	private int controlSeg = 0;//
 
-	//This is input arguments
-	//targetControls is also used for output
+	// This is input arguments
+	// targetControls is also used for output
 	private MyJPanel targetPict = null;
 	private WebDWSyntax local_webdw = null;//
 	private CWebDWData webdwData = null;
 
-	//myControls is used for output
+	// myControls is used for output
 	public ArrayList targetControls = null;//
 	private MyUIComponent myControls[] = null;//
 
-	public CWebDWViewModel(WebDWSyntax webdw,CWebDWData webdwdata) {
-		//接收输入参数
+	public CWebDWViewModel(WebDWSyntax webdw, CWebDWData webdwdata) {
+		// 接收输入参数
 		this.local_webdw = webdw;
 		this.webdwData = webdwdata;
-		
-		//初始化视图模型,在视图模型被构建的时候进行初始化
+
+		// 初始化视图模型,在视图模型被构建的时候进行初始化
 		this.targetControls = new ArrayList();
 		this.targetPict = new MyJPanel("targPict");
 		this.myControls = new MyUIComponent[10001];
@@ -77,16 +78,28 @@ public class CWebDWViewModel extends Golbal {
 
 		// 'step3 draw label on header
 		iret = _DrawDW_Label(0, 0);
-
+		
+		iret = _DrawLine(0,0);
 		// 'step4 draw column on body
 		for (rowid = 1; rowid <= webdwData.GetRowCount(); rowid++) {
-			iret = _DrawDW_Label(rowid, 0);// '������һ�е�Label
-			iret = _DrawDW_Column(rowid, 0);// '������һ�е�Column
+			// 绘制标签对象
+			iret = _DrawDW_Label(rowid, 0); 
+			// 绘制列对象
+			iret = _DrawDW_Column(rowid, 0); 
+			// 绘制线条对象
+			iret = _DrawLine(rowid,0);
 		}
 
 		return 0;
 	}
 
+	/**
+	 * 绘制标签对象
+	 * 
+	 * @param lineNum
+	 * @param leftPos
+	 * @return
+	 */
 	private int _DrawDW_Label(int lineNum, int leftPos) {
 		System.out.println("begin DrawLabel");
 		int id = 0;
@@ -130,6 +143,13 @@ public class CWebDWViewModel extends Golbal {
 		return 0;
 	}
 
+	/**
+	 * 绘制列对象
+	 * 
+	 * @param lineNum
+	 * @param leftPos
+	 * @return
+	 */
 	private int _DrawDW_Column(int lineNum, int leftPos) {
 		System.out.println("begin drawColumn");
 		int id = 0;
@@ -227,10 +247,10 @@ public class CWebDWViewModel extends Golbal {
 					radioobj.setBounds((int) (10), (int) ((30 + 60 * radioid)), (int) (obj.getWidth() - 40),
 							(int) (50));
 					radioobj.setValuestring(valuestring);
-					//保存radioValue的值
-					//radioDisplay的值保存在Text属性里面
+					// 保存radioValue的值
+					// radioDisplay的值保存在Text属性里面
 					radioobj.setRadiovalue(radioValue);
-					
+
 					// 根据获取到的radioDisplay值和svalue判断，判断value值
 					radioobj.Value(radioValue.equals(svalue));
 				}
@@ -259,7 +279,7 @@ public class CWebDWViewModel extends Golbal {
 
 				myCheckBox.Value(GF_IF_Long(local_webdw.column[id].checkbox.on.equals(svalue), 1, 0) == 1);
 			}
-			
+
 			// 绘制下拉框
 			MyJComboBox myComboBox;
 			String combovalues[] = new String[1];
@@ -299,6 +319,61 @@ public class CWebDWViewModel extends Golbal {
 
 				}
 			}
+
+		}
+		return 0;
+	}
+
+	// '在界面上画线的方法
+	// '通过这个方法支持在界面上进行画线
+	// 'leftpos 左偏移量 leftpos<=0
+	private int _DrawLine(int lineNum, int leftPos) {
+		int id;// As Long
+		String sname;// As String
+		// Dim obj As Control
+		int top;// As Long
+		int beginRowid = 1;// As Long
+		double convertRate;// As Double
+
+		// beginRowid = VScroll_Line.value + 1
+		convertRate = 1.0;
+
+		for (id = 1; id <= 100; id++) {
+			if (local_webdw.lineinfo[id].Name.equals("")) {// Then
+				// DrawLine = 0
+				// Exit Function
+				return 0;
+			}
+
+			if (lineNum == 0 && !local_webdw.lineinfo[id].band.equals("header")) {// Then '绘制头部，band不为header,退出
+				// GoTo continueNext
+				continue;
+			}
+
+			if (lineNum > 0 && !local_webdw.lineinfo[id].band.equals("detail")) {// Then '绘制细节，band不为detail,退出
+				// GoTo continueNext
+				continue;
+			}
+
+			// '先计算标签的top值，以此来判断是否需要继续创建对象并绘制之
+			top = 0;
+			if (local_webdw.lineinfo[id].band.equals("header")) {
+				top = local_webdw.lineinfo[id].y1;
+			}
+			if (local_webdw.lineinfo[id].band.equals("detail")) {
+				top = local_webdw.lineinfo[id].y1 + local_webdw.header.height
+						+ local_webdw.detail.height * (lineNum - beginRowid);
+			}
+
+			sname = targetPict.Name + "_" + lineNum + "_" + local_webdw.lineinfo[id].Name;
+
+			// 创建一个MyJLine对象
+			MyJLine newline = new MyJLine(sname, targetControls, targetPict);
+
+			newline.x1 = local_webdw.lineinfo[id].x1 + leftPos;
+			newline.x2 = local_webdw.lineinfo[id].x2 + leftPos;
+			newline.y1 = top;
+			newline.y2 = (local_webdw.lineinfo[id].y2 - local_webdw.lineinfo[id].y1) + top;
 
 		}
 		return 0;

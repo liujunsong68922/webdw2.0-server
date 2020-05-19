@@ -7,4 +7,5 @@ public class MyUIComponentConst {
 	public static String UITYPE_LABEL = "JLabel";
 	public static String UITYPE_RADIOBUTTON = "JRadioButton";
 	public static String UITYPE_TEXTFIELD = "JTextField";
+	public static String UITYPE_LINE ="JLine";
 }
