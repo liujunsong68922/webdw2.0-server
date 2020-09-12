@@ -1,7 +1,12 @@
 package com.webdw.event;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.webdw.event.handle.IWebDWEventHandler;
 import com.webdw.event.model.WebDWEvent;
+
+import hello.webdw.controller.WebDWController;
 
 /**
  * 这个类是一个事件监听类，负责监听WebDW控件（CWebDWController）产生的事件
@@ -9,6 +14,7 @@ import com.webdw.event.model.WebDWEvent;
  *
  */
 public class WebDWEventManager {
+	Logger logger = LoggerFactory.getLogger(WebDWController.class);
 	
 	/**
 	 * triggerEvent的结果是生成一个数据库操作的SQL命令
@@ -19,7 +25,9 @@ public class WebDWEventManager {
 	 * @return
 	 */
 	public String triggerEvent(String dwname,String event,String row_olddata,String row_newdata) {
+		logger.info("enter triggerEvent");
 		//step1:判断输入的event是不是合法的event定义
+		
 		if(event==null || event.equals("")) {
 			System.out.println("Event Argument Is Empty.");
 			return "";

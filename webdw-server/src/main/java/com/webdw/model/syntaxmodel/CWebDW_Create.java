@@ -2,6 +2,8 @@ package com.webdw.model.syntaxmodel;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
 import com.webdw.common.VBFunction;
@@ -39,7 +41,19 @@ public class CWebDW_Create extends Golbal {
 			//做一个特殊处理.
 			return 0;
 		}
-		return this.CreateBySyntaxString(strSyntax);
+		
+		int i = this.CreateBySyntaxString(strSyntax);
+		
+		//测试缓缓为jsonString
+		try {
+			String s1 = _toJsonString();
+			//回写到数据库配置表中
+			dwconfig.setDWJsonString(dwname,s1);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return i;
 	}
 
 	// Create using datawindow syntax String
@@ -727,6 +741,18 @@ public class CWebDW_Create extends Golbal {
 			return 0;
 		}
 		
+	}
+	
+	/**
+	 * 把语法模型转换成标准的JSON格式字符串
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	private String _toJsonString() throws JsonProcessingException {
+		ObjectMapper objectmapper = new ObjectMapper();
+		String s1 = objectmapper.writeValueAsString(this.local_webdw);
+		System.out.println(s1);
+		return s1;
 	}
 
 }

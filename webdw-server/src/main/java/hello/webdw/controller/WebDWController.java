@@ -2,6 +2,9 @@ package hello.webdw.controller;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+//import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +38,9 @@ import hello.webdw.dbutil.WebDWDBUtil;
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/") //
 public class WebDWController {
+	//Logger logger = Logger.getLogger(WebDWController.class);
+	Logger logger = LoggerFactory.getLogger(WebDWController.class);
+	
 	// 是否支持默认用户，如果不支持则会报错
 	private boolean CONST_DEFAULT_USER_ALLOW = true;
 	// 支持默认用户的情况下，token无效会得到默认用户名，传递给后台
@@ -47,13 +53,15 @@ public class WebDWController {
 	 */
 	@GetMapping(path = "/")
 	public @ResponseBody String index() {
-		String a = "Welcome to webdw's world!";
-		return a;
+		String s = "Welcome to webdw's world!";
+		logger.info(s);
+		return s;
 	}
 
 	@GetMapping(path = "/setdataobject")
 	public @ResponseBody WebDWControllerRet dw_f1_SetDataObject(@RequestParam String token,
 			@RequestParam String dwname) {
+		logger.info("enter setdataobject.token="+token+",dwname="+dwname);
 		return this._SetDataObject(token, dwname);
 	}
 
@@ -72,6 +80,7 @@ public class WebDWController {
 	@GetMapping(path = "/retrieve")
 	public @ResponseBody WebDWControllerRet dw_f2_Retrieve(@RequestParam String token, @RequestParam String dwname,
 			@RequestParam String args) {
+		logger.info("enter retrieve.token="+token+",dwname="+dwname+",args="+args);
 		return this._Retrieve(token, dwname, args);
 	}
 
@@ -122,6 +131,7 @@ public class WebDWController {
 	@GetMapping(path = "/deleterow")
 	public @ResponseBody WebDWControllerRet dw_f4_DeleteRow(@RequestParam String token, @RequestParam String uuid,
 			@RequestParam int rowid) {
+		logger.info("enter deleterow.token="+token+",uuid="+uuid+",rowid="+rowid);
 		return this._DeleteRow(token, uuid, rowid);
 	}
 
@@ -140,6 +150,7 @@ public class WebDWController {
 
 	@GetMapping(path = "/update")
 	public @ResponseBody WebDWControllerRet dw_f5_Update(@RequestParam String token, @RequestParam String uuid) {
+		logger.info("enter update.token="+token+",uuid="+uuid);
 		return this._Update(token, uuid);
 	}
 
@@ -158,6 +169,7 @@ public class WebDWController {
 	@GetMapping(path = "/setitem")
 	public @ResponseBody WebDWControllerRet dw_f6_SetItem(@RequestParam String uuid, @RequestParam int rowid,
 			@RequestParam int colid, @RequestParam String data) throws Exception {
+		logger.info("enter setitem");
 		return this._SetItem(uuid, rowid, colid, data);
 	}
 	

@@ -14,7 +14,8 @@ public class WebDWEventHandleFactory {
 		
 		String classname="";
 		//根据数据表定义来获取特定的事件处理类定义，一个事件只对应一个类
-		
+		//classname的命名规则如下：
+		//classname = dwname+'_EventHandler',首字母大写
 		
 		
 		try {

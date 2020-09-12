@@ -2,6 +2,8 @@ package com.webdw.model.datamodel.dwstore;
 
 import com.webdw.common.Golbal;
 import com.webdw.common.MyInt;
+import com.webdw.event.WebDWEventManager;
+import com.webdw.event.model.WebDWEvent;
 
 /*
  Rem -------------------------------------------------
@@ -382,6 +384,16 @@ public class CWebDWData_DataBuffer extends Golbal {
 				if (iret.intvalue == -1) {
 					return "";
 				}
+				//触发一个DataWindow的Insert事件
+				//add by liujunsong
+				//2020-5-22
+				WebDWEventManager dwevent = new WebDWEventManager();
+				String dwname="";
+				String event =WebDWEvent.InsertEvent;
+				String olddata="";
+				String newdata="";
+				//触发一个事件
+				dwevent.triggerEvent(dwname,dwname,olddata,newdata);
 				return Sql;
 			}
 
